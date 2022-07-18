@@ -5,7 +5,8 @@ All you need to do is copy include folder to your program, then include yukihikc
 
 # Device
  - MV-CA050-10GM
-![CCD](https://www.hikrobotics.com/cn2/source/vision/image/2022/7/13/20220713201025293.png)![CCD Back](https://www.hikrobotics.com/cn2/source/vision/image/2022/7/13/20220713201025419.png)
+ - ![CCD](https://www.hikrobotics.com/cn2/source/vision/image/2022/7/13/20220713201025293.png)
+ - ![CCD Back](https://www.hikrobotics.com/cn2/source/vision/image/2022/7/13/20220713201025419.png)
 
 # Dependence
 ```
