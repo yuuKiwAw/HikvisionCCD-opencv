@@ -23,11 +23,15 @@ void* CCD_HANDLE = nullptr;                         // Current selected ccd came
 unsigned char* data;
 void INIT_YUKIHIKCCD();
 void CHECK_HIK_DEVICES_ACCESS();                    // Check Hikversion Devices available.
+void REVEIVE_HIK_OPTIONS();                         // Receive Hikversion MVS options value.
 void RECEIVE_HIK_FRAME();                           // Receive stream from Hikversion ccd.
 
 public:
 unsigned int SELECTED_CAM_NUM = 0;                  // Selected ccd camera number from hik_ccd_devices_list.
 cv::Mat CV_MAT;                                     // Hikversion ccd to opencv mat var.
+int IMG_WIDTH;
+int IMG_HEIGHT;
+float FPS;
 YukiHikCCD();
 ~YukiHikCCD();
 void OPEN_CCD_DEVICE();
@@ -113,8 +117,33 @@ inline void YukiHikCCD::OPEN_CCD_DEVICE() {
         return;
     }
 
+    REVEIVE_HIK_OPTIONS();
     RECEIVE_HIK_FRAME();
 }
+
+
+inline void YukiHikCCD::REVEIVE_HIK_OPTIONS() {
+    ret = MV_CC_GetIntValue(CCD_HANDLE, "Width", &hik_param);
+    if (ret != MV_OK) {
+        std::cout << "[ERROR]Get Width failed!!!" << std::endl;
+    }
+    IMG_WIDTH = hik_param.nCurValue;
+
+    ret = MV_CC_GetIntValue(CCD_HANDLE, "Height", &hik_param);
+    if (ret != MV_OK) {
+        std::cout << "[ERROR]Get Height failed!!!" << std::endl;
+    }
+    IMG_HEIGHT = hik_param.nCurValue;
+    std::cout << "[INFO]IMG SIZE: " << std::to_string(IMG_WIDTH) << "x" << std::to_string(IMG_HEIGHT) << std::endl;
+
+    MVCC_FLOATVALUE stFloatVal;
+    ret = MV_CC_GetFloatValue(CCD_HANDLE, "AcquisitionFrameRate", &stFloatVal);
+    if (ret != MV_OK) {
+        std::cout << "[ERROR]Get FPS failed!!!" << std::endl;
+    }
+    FPS = stFloatVal.fCurValue;
+    std::cout << "[INFO]FPS: " << std::to_string(FPS) << std::endl;
+};
 
 
 inline void YukiHikCCD::RECEIVE_HIK_FRAME() {
